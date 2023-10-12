@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.loke.minidrawing.Drawing
-        android:id="@+id/drawing_view"
+    <FrameLayout
+        android:id="@+id/drawing_view_frame"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
@@ -15,8 +15,97 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/brush_selector"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/paint_color_layout">
+        <ImageView
+            android:id="@+id/iv_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/hiploke"/>
+        <com.loke.minidrawing.Drawing
+            android:id="@+id/drawing_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#69D3C7C7"
+            />
+    </FrameLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/paint_color_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/brush_selector"
+        app:layout_constraintTop_toBottomOf="@id/drawing_view_frame"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pallet"
+            android:tag="@color/yellow"
+            android:background="@color/yellow"
+            android:onClick="paintClicked"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pallet"
+            android:tag="@color/skin"
+            android:background="@color/skin"
+            android:onClick="paintClicked"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pallet"
+            android:tag="@color/black"
+            android:background="@color/black"
+            android:onClick="paintClicked"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pallet"
+            android:tag="@color/red"
+            android:background="@color/red"
+            android:onClick="paintClicked"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pallet"
+            android:tag="@color/blue"
+            android:background="@color/blue"
+            android:onClick="paintClicked"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pallet"
+            android:tag="@color/magenta"
+            android:background="@color/magenta"
+            android:onClick="paintClicked"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pallet"
+            android:tag="@color/green"
+            android:background="@color/green"
+            android:onClick="paintClicked"/>
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
+            android:src="@drawable/pallet"
+            android:tag="@color/white"
+            android:background="@color/white"
+            android:onClick="paintClicked"/>
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/brush_selector"
@@ -26,7 +115,7 @@
         android:scaleType="fitXY"
         android:src="@drawable/brush"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/drawing_view"
+        app:layout_constraintTop_toBottomOf="@id/paint_color_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

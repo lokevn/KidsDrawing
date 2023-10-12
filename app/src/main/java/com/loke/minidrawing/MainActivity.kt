@@ -3,10 +3,15 @@ package com.loke.minidrawing
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
+import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 
 class MainActivity : AppCompatActivity() {
     private var drawingView: Drawing? = null
+    private var mImageButtonCurrentPaint:ImageButton? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,6 +20,12 @@ class MainActivity : AppCompatActivity() {
         drawingView = findViewById(R.id.drawing_view)
         //drawingView?.setSizeforBrush(20f)
 
+        val linearLayoutPaintColors = findViewById<LinearLayout>(R.id.paint_color_layout)
+        mImageButtonCurrentPaint = linearLayoutPaintColors[0] as ImageButton
+        mImageButtonCurrentPaint!!.setImageDrawable(
+            ContextCompat.getDrawable(this, R.drawable.pallet_pressed)
+        )
+        drawingView?.setColorforBrush(mImageButtonCurrentPaint!!.tag.toString())
         val btnBrushSelect = findViewById<ImageButton>(R.id.brush_selector)
         btnBrushSelect.setOnClickListener() {
             showBrushSizeDialog()
@@ -42,5 +53,21 @@ class MainActivity : AppCompatActivity() {
         }
         brushDialog.show()
 
+    }
+
+    fun paintClicked(view:View) {
+        //Toast.makeText(this, "click paint", Toast.LENGTH_SHORT).show()
+        if (view != mImageButtonCurrentPaint) {
+            val imageButton = view as ImageButton
+            val colorTag = imageButton.tag.toString()
+            drawingView?.setColorforBrush(colorTag)
+            mImageButtonCurrentPaint!!.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.pallet)
+            )
+            mImageButtonCurrentPaint = imageButton
+            mImageButtonCurrentPaint!!.setImageDrawable(
+                ContextCompat.getDrawable(this, R.drawable.pallet_pressed)
+            )
+        }
     }
 }

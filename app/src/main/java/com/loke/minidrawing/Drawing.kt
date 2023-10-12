@@ -90,4 +90,9 @@ class Drawing(context:Context, attrs: AttributeSet): View(context, attrs) {
          mBrushSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, newSize, resources.displayMetrics)
          //mDrawPaint!!.strokeWidth = mBrushSize
     }
+
+    fun setColorforBrush(newColor:String) {
+        color = Color.parseColor(newColor)
+        //mDrawPaint!!.color = color
+    }
 }
