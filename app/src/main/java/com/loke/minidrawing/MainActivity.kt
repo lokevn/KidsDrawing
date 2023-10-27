@@ -3,11 +3,14 @@ package com.loke.minidrawing
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -20,6 +23,14 @@ class MainActivity : AppCompatActivity() {
     private var drawingView: Drawing? = null
     private var mGalleryButton:ImageButton? = null
     private var mImageButtonCurrentPaint:ImageButton? = null
+    private var openGalleryLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result ->
+            if(result.resultCode == RESULT_OK && result.data != null) {
+                val ivFrame = findViewById<ImageView>(R.id.iv_background)
+                ivFrame.setImageURI(result.data!!.data)
+            }
+        }
     private val permResultLauncher:ActivityResultLauncher<Array<String>> =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
             permissions ->
@@ -27,7 +38,9 @@ class MainActivity : AppCompatActivity() {
                 val perName = it.key
                 val isGranted = it.value
                 if(isGranted) {
-                    Toast.makeText(this, "Permission granted for {$perName}",Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Permission granted for {$perName}",Toast.LENGTH_SHORT).show()
+                    val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    openGalleryLauncher.launch(pickIntent)
                 }
                 else {
                     Toast.makeText(this, "permission denied for {$perName}}", Toast.LENGTH_SHORT).show()
@@ -56,7 +69,7 @@ class MainActivity : AppCompatActivity() {
         mGalleryButton = findViewById(R.id.bạckground_selector)
         mGalleryButton?.setOnClickListener() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) &&
                 shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                 AlertDialog.Builder(this).setTitle("Paint requires Storage&Location Permision")
                     .setMessage("Paint not function properly without Storage&Camera access")
@@ -65,10 +78,19 @@ class MainActivity : AppCompatActivity() {
                 }.create().show()
             }
             else {
-                permResultLauncher.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,
+                permResultLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_IMAGES,
                     Manifest.permission.CAMERA))
             }
-            //Snackbar.make(it, "you have clicked Gallery", Snackbar.LENGTH_LONG).show()
+            //weSnackbar.make(it, "you have clicked Gallery", Snackbar.LENGTH_LONG).show()
+        }
+
+        val btnUndo = findViewById<ImageButton>(R.id.undo_button)
+        btnUndo.setOnClickListener() {
+            drawingView?.undoDrawPath()
+        }
+        val btnRedo = findViewById<ImageButton>(R.id.redo_button)
+        btnRedo.setOnClickListener() {
+            drawingView?.redoDrawPath()
         }
     }
 

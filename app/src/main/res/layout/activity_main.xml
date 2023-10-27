@@ -28,9 +28,8 @@
             android:layout_height="match_parent"
             android:background="#69D3C7C7"
             />
+
     </FrameLayout>
-
-
 
     <LinearLayout
         android:id="@+id/paint_color_layout"
@@ -110,7 +109,7 @@
 
     <LinearLayout
         android:id="@+id/selectors_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
@@ -119,28 +118,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
         <ImageButton
+            android:id="@+id/undo_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_undo"
+            />
+        <ImageButton
+            android:id="@+id/redo_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="50dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_redo"
+            />
+        <ImageButton
             android:id="@+id/brush_selector"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
             android:scaleType="fitXY"
             android:src="@drawable/brush"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/bạckground_selector"
-            app:layout_constraintStart_toStartOf="parent" />
+            />
         <ImageButton
             android:id="@+id/bạckground_selector"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
             android:scaleType="fitXY"
             android:src="@drawable/gallery_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/brush_selector" />
-
+            />
 
 
     </LinearLayout>

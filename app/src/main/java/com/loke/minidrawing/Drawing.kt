@@ -7,26 +7,28 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 
 class Drawing(context:Context, attrs: AttributeSet): View(context, attrs) {
-    private var mDrawPath: CustomePath? = null
+    private var mDrawPath: CustomPath? = null
     private var mCanvasBitmap:Bitmap? = null
     private var mDrawPaint:Paint? = null
     private var mCanvasPaint:Paint? = null
     private var mBrushSize:Float = 0.0f
     private var color = Color.BLUE
     private var canvas:Canvas? = null
-    private val mPaths = ArrayList<CustomePath>()
+    private val mPaths = ArrayList<CustomPath>()
+    private val mUndoPaths = ArrayList<CustomPath>()
     init {
         setupDrawing()
     }
 
     private fun setupDrawing() {
         mDrawPaint = Paint()
-        mDrawPath = CustomePath(color, mBrushSize)
+        mDrawPath = CustomPath(color, mBrushSize)
         mDrawPaint?.color = color
         mDrawPaint?.style = Paint.Style.STROKE
         mDrawPaint?.strokeJoin = Paint.Join.ROUND
@@ -35,7 +37,7 @@ class Drawing(context:Context, attrs: AttributeSet): View(context, attrs) {
         //mBrushSize = 20.0f
     }
 
-    internal inner class CustomePath(var color:Int, var brushThickness:Float):Path() {
+    internal inner class CustomPath(var color:Int, var brushThickness:Float):Path() {
 
     }
 
@@ -78,7 +80,7 @@ class Drawing(context:Context, attrs: AttributeSet): View(context, attrs) {
             }
             MotionEvent.ACTION_UP -> {
                 mPaths.add(mDrawPath!!)
-                mDrawPath = CustomePath(color, mBrushSize)
+                mDrawPath = CustomPath(color, mBrushSize)
             }
             else -> return false
         }
@@ -94,5 +96,21 @@ class Drawing(context:Context, attrs: AttributeSet): View(context, attrs) {
     fun setColorforBrush(newColor:String) {
         color = Color.parseColor(newColor)
         //mDrawPaint!!.color = color
+    }
+
+    fun undoDrawPath() {
+        if (mPaths.size>0) {
+            mUndoPaths.add(mPaths[mPaths.size-1])
+            mPaths.removeAt(mPaths.size-1)
+        }
+        invalidate()
+    }
+
+    fun redoDrawPath() {
+        if (mUndoPaths.size>0) {
+            mPaths.add(mUndoPaths[mUndoPaths.size-1])
+            mUndoPaths.removeAt(mUndoPaths.size-1)
+        }
+        invalidate()
     }
 }
