@@ -83,16 +83,19 @@ class MainActivity : AppCompatActivity() {
 
         mGalleryButton = findViewById(R.id.bạckground_selector)
         mGalleryButton?.setOnClickListener() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES)) {
-                AlertDialog.Builder(this).setTitle("Paint requires Storage&Location Permision")
-                    .setMessage("Paint not function properly without Storage&Camera access")
+            if ((Build.VERSION.SDK_INT <= Build.VERSION_CODES.R
+                        &&shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE))
+                ||(Build.VERSION.SDK_INT > Build.VERSION_CODES.R
+                        &&shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES))) {
+                AlertDialog.Builder(this).setTitle("Paint requires Storage Permision")
+                    .setMessage("Paint not function properly without Storage access")
                     .setNegativeButton("Cancel"){
                         dialog, which-> dialog.dismiss()
                     }.setPositiveButton("Yes"){
                         dialog, which->
                         dialog.dismiss()
-                        permResultLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_IMAGES))
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) permResultLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
+                        else permResultLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_IMAGES))
                     }.create().show()
             }
             else {
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
         val btnSave = findViewById<ImageButton>(R.id.save_buton)
         btnSave.setOnClickListener() {
-            if (isReadStorageAllowed()) {
+            if (isStorageAccessAllowed()) {
                 showProgressDialog()
                 val frame = findViewById<FrameLayout>(R.id.drawing_view_frame)
                 lifecycleScope.launch {
@@ -122,14 +125,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             else {
-                AlertDialog.Builder(this).setTitle("Paint requires Storage&Location Permision")
-                    .setMessage("Paint could not save images without Storage&Camera access")
+                AlertDialog.Builder(this).setTitle("Paint requires Storage Permision")
+                    .setMessage("Paint could not save images without Storage access")
                     .setNegativeButton("Cancel"){
                             dialog, which-> dialog.dismiss()
                     }.setPositiveButton("Yes"){
                             dialog, which->
                         dialog.dismiss()
-                        permResultLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_IMAGES))
+                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) permResultLauncher.launch(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                        else permResultLauncher.launch(arrayOf(Manifest.permission.READ_MEDIA_IMAGES))
                     }.create().show()
             }
         }
@@ -233,8 +237,13 @@ class MainActivity : AppCompatActivity() {
         return  result
     }
 
-    private fun isReadStorageAllowed():Boolean {
-        val result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private fun isStorageAccessAllowed():Boolean {
+        val result =
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            } else {
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES)
+            }
         return result == PackageManager.PERMISSION_GRANTED
     }
 
@@ -266,7 +275,6 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e("File Selector",
                 "The selected file can't be shared; Error: ${e.toString()}")
-            null
         }
     }
 }
