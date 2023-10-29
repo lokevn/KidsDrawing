@@ -47,7 +47,7 @@ class Drawing(context:Context, attrs: AttributeSet): View(context, attrs) {
         canvas = Canvas(mCanvasBitmap!!)
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         canvas?.drawBitmap(mCanvasBitmap!!,0.0f, 0.0f, mCanvasPaint)
         for (path in mPaths) {
@@ -58,7 +58,6 @@ class Drawing(context:Context, attrs: AttributeSet): View(context, attrs) {
         mDrawPaint?.strokeWidth = mDrawPath!!.brushThickness
         mDrawPaint?.color = mDrawPath!!.color
         canvas?.drawPath(mDrawPath!!, mDrawPaint!!)
-
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
